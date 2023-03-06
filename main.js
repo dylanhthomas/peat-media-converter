@@ -13,6 +13,10 @@ const isMac = process.platform === 'darwin'
 if (require('electron-squirrel-startup')) app.quit();
 
 
+require('update-electron-app')()
+
+
+
 
 const template = [
   {
@@ -34,6 +38,9 @@ const menu = Menu.buildFromTemplate(template)
 Menu.setApplicationMenu(menu)
 
 
+
+
+
 function createWindow() {
     // Create the browser window
     const mainWindow = new BrowserWindow({
@@ -52,7 +59,7 @@ function createWindow() {
     mainWindow.loadFile('index.html')
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished

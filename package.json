@@ -4,7 +4,7 @@
   "description": "peat-media-converter",
   "keywords": [],
   "main": "./main.js",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "author": "dylanhthomas",
   "scripts": {
     "start": "electron-forge start",
@@ -24,7 +24,8 @@
     "ffmpeg-static-electron": "2.0.3",
     "jquery": "3.6.3",
     "random-string": "0.2.0",
-    "turretcss": "5.2.2"
+    "turretcss": "5.2.2",
+    "update-electron-app": "^2.0.1"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.4",
