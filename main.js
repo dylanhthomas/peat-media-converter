@@ -6,41 +6,36 @@ const os = require('os')
 var mainWindow = null
 const path = require('path')
 
+// TODO - remove platform references so this is not needed 
 const isMac = process.platform === 'darwin'
 
 
-// run this as early in the main process as possible
+// Enable installer events
 if (require('electron-squirrel-startup')) app.quit();
 
-
+// Enable app updates
 require('update-electron-app')()
 
 
 
-
-const template = [
-  {
+// App Menu
+const template = [{
     role: 'about',
     label: "About",
-    submenu: [
-      {
+    submenu: [{
         label: 'Learn More',
         click: async () => {
-          const { shell } = require('electron')
-          await shell.openExternal('https://electronjs.org')
+            const { shell } = require('electron')
+            await shell.openExternal('https://electronjs.org')
         }
-      }
-    ]
-  }
-]
+    }]
+}]
 
 const menu = Menu.buildFromTemplate(template)
 Menu.setApplicationMenu(menu)
 
 
-
-
-
+// App Window
 function createWindow() {
     // Create the browser window
     const mainWindow = new BrowserWindow({
@@ -50,7 +45,6 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
-
             // preload: path.join(__dirname, 'preload.js')
         }
     })
@@ -75,9 +69,7 @@ app.whenReady().then(() => {
     })
 })
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
+// Quit when all windows are closed.
 app.on('window-all-closed', function() {
     if (process.platform !== 'darwin') app.quit()
 })

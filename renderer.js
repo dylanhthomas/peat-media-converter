@@ -1,8 +1,9 @@
 /**
  * This file is loaded via the <script> tag in the index.html file and will
- * be executed in the renderer process for that window. No Node.js APIs are
- * available in this process because `nodeIntegration` is turned off and
- * `contextIsolation` is turned on. Use the contextBridge API in `preload.js`
+ * be executed in the renderer process for that window.
+ * Node.js APIs are available in this process because `nodeIntegration` is 
+ * enabled and `contextIsolation` is turned off in `main.js`.
+ * TODO: Investigate changing to contextBridge API in `preload.js`
  * to expose Node.js functionality from the main process.
  */
 
@@ -11,16 +12,15 @@ const fs = require('@supercharge/fs')
 const $ = require('jquery')
 const shell = require('electron').shell
 
-
 const process = require('child_process')
 var randomString = require('random-string');
 var ffmpeg = require('ffmpeg-static-electron');
-
 // console.log(ffmpeg.path);
 
 
-
 const button = document.getElementById("upload")
+
+// Set default conversion format
 var format = "videoFull"
 
 button.addEventListener('click', function(event) {
@@ -31,20 +31,21 @@ button.addEventListener('click', function(event) {
 })
 
 ipc.on('selected-file', function(event, paths) {
-    console.log(event)
-    console.log(paths)
+    // console.log(event)
+    // console.log(paths)
 
+    // Set name for output directory
     var subdir = 'converter_output'
+    // Construct path of output directory, as a subdirectory of the input file path
     var dir = fs.dirname(paths) + "\\" + subdir
 
-    // console.log(dir)
 
+    // If the output directory does not exist, create it
     if (!fs.existsSync(dir)) {
-        console.log("making dir")
         fs.mkdirSync(dir)
-        console.log("made it")
-
     }
+
+    // Create random string, to be used for notices
     var randomid = randomString()
 
 
@@ -52,9 +53,10 @@ ipc.on('selected-file', function(event, paths) {
         <div id="${randomid}" class="padding-xs color-white background-info">${paths} is converting. Please wait. <div class="space-xl spinner spinner-xl"></div></div>
     `)
 
+
     var basename = fs.filename(paths)
 
-    console.log("basename: " + basename)
+    // console.log("basename: " + basename)
 
 
     var convert_command = ""
@@ -62,7 +64,7 @@ ipc.on('selected-file', function(event, paths) {
     var shell_filename = ""
 
 
-    if (format == "videoBasic" || format == "animatedGIF" ) {
+    if (format == "videoBasic" || format == "animatedGIF") {
         output_filename = `${dir}\\${basename}_converted.avi`
         var safe_filename = !fs.existsSync(output_filename)
         console.log("safe filename: " + safe_filename)
@@ -79,14 +81,14 @@ ipc.on('selected-file', function(event, paths) {
             shell_filename = output_filename
             index = index + 1
         }
-    }
+    } else {
 
-    else {
         output_filename = `${dir}\\${basename}_converted_000.avi`
         var safe_filename = !fs.existsSync(output_filename)
         console.log("safe filename: " + safe_filename)
         shell_filename = output_filename
         output_pattern = `${dir}\\${basename}_converted_%03d.avi`
+        // output pattern: 3 place counter, incrementing for each segment. i.e 000, 001, 002, 003, 004...
 
         let index = 1
 
@@ -103,17 +105,43 @@ ipc.on('selected-file', function(event, paths) {
 
     }
 
+    // FFMPEG conversion command with shared options
+    /*
+        -i                  input file
+        -an                 discard audio
+        -vcodec rawvideo    rencode video as raw, uncompressed
+        -y                  overwrite any files with same name in output directory
+        -r 25               set framerate as 25 frames per second
+        -hidebanner         hide ffmpeg info in console
+        -loglever error     only output errors to console
 
+    */
     var command_base = `${ffmpeg.path} -i "${paths}" -an -vcodec rawvideo -y -r 25 -hide_banner -loglevel error`
-    // var command_base = `${ffmpeg.path} -i "${paths}" -an -vcodec rawvideo -y -r 25`
 
     switch (format) {
         case "animatedGIF":
             convert_command = `${command_base} -pix_fmt yuv420p "${output_filename}"`
             break;
+
+            // FFMPEG options
+            /*
+                -pix_fmt yuv420p    encode using video pixels
+
+            */
+
         case "videoFull":
             convert_command = `${command_base} -vf "scale='min(640,iw)':-1" -map 0 -segment_time 00:03:00 -f segment -reset_timestamps 1 "${output_pattern}"`
             break;
+
+            // FFMPEG options
+            /*
+                -vf "scale='min(640,iw)':-1"    if video is larger than 640 pixels wide, scale it down to 640 pixels wide and automatic height, maintaining aspect ratio.
+                -map 640                        TODO: explanation, and test if needed -vn / -an / -sn / -dn
+                -f segment                      Break video into multiple files by segment                     
+                -segment_time 00:03:00          Create a new segment for every 3 minutes of video
+                -reset_timestamps 1             For the segment files, start the timestamps from 0 to allow them to be played
+            */
+
         case "videoBasic":
             convert_command = `${command_base} "${output_filename}"`
             break;
@@ -122,20 +150,22 @@ ipc.on('selected-file', function(event, paths) {
             break;
     }
 
-    console.log("convert command: " + convert_command)
-    console.log("output file: " + output_filename)
-    console.log("shell file: " + shell_filename)
+    // console.log("convert command: " + convert_command)
+    // console.log("output file: " + output_filename)
+    // console.log("shell file: " + shell_filename)
 
     process.exec(convert_command, function(error, stdout, stderr) {
         console.log(stdout)
         console.log(stderr)
 
+        // Remove the "In Progress" message, based on the random id assigned earlier
         $(`#${randomid}`).detach()
 
         $('#info').append(`
             <div class="padding-xs color-white background-success margin-vertical-xs">${paths} is finished converting.</div>
         `)
 
+        // After conversion, open the output folder with the video file selected
         shell.showItemInFolder(shell_filename);
 
         if (error != null)
