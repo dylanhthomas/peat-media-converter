@@ -1,0 +1,22 @@
+{
+  "name": "one",
+  "productName": "one",
+  "description": "My Electron application description",
+  "keywords": [],
+  "main": "./main.js",
+  "version": "1.0.0",
+  "author": "dylanhthomas",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "jquery": "3.6.3",
+    "@supercharge/fs": "3.4.0",
+    "random-string": "0.2.0",
+    "ffmpeg-static-electron": "2.0.3",
+    "turretcss": "5.2.2"
+  },
+  "devDependencies": {
+    "electron": "23.1.1"
+  }
+}

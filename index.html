@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+    <link href=".\node_modules\turretcss\dist\turretcss.min.css"" rel=" stylesheet">
+    <title>PEAT Media Preparation</title>
+</head>
+
+<body>
+    <div class="container padding-xxl">
+        <!-- <h1>PEAT Media Preparation</h1> -->
+
+        <fieldset>
+            <legend class="font-size-xxl margin-vertical-l"><strong>Select a conversion mode:</strong></legend>
+            <label class="control radio control-xxl">
+                <input type="radio" id="videoFull" name="format" value="videoFull" checked>
+                <span class="control-indicator"></span>
+                <span class="control-label font-size-xxl" for="videoFull"><strong>Video - Full Processing</strong></span>
+            </label>
+            <p class="padding-left-xl"><strong>Best for long or large videos.</strong> Convert a video into uncompressed
+                AVI and scale it down to 640 pixels wide. Audio will be discarded. If the video is longer than 3
+                minutes, it will be split into 3 minute segments. This will allow it to be processed by PEAT which
+                cannot analyze files larger than 2 GB.</p>
+            <label class="control radio control-xxl">
+                <input type="radio" id="videoBasic" name="format" value="videoBasic">
+                <span class="control-indicator"></span>
+                <span class="control-label font-size-xxl" for="videoBasic"><strong>Video - Basic Processing</strong></soan>
+            </label>
+            <p class="padding-left-xl"><strong>Best for short or small videos.</strong> Convert a video into a single
+                uncompressed AVI. Audio will be discarded.</p>
+            <label class="control radio control-xxl">
+                <input type="radio" id="animatedGIF" name="format" value="animatedGIF">
+                <span class="control-indicator"></span>
+                <span class="control-label font-size-xxl" for="animatedGIF"><strong>Animated GIF</strong></span>
+            </label>
+            <p class="padding-left-xl">Convert an animated gif into an uncompressed AVI that can be analyzed by PEAT.
+            </p>
+        </fieldset>
+        <div class="space-l"></div>
+        <button class="button button-primary" id="upload">Select File and Convert</button>
+        <div class="space-l"></div>
+        <div id="info"></div>
+    </div>
+    <!-- You can also require other files to run in this process -->
+    <script src="./renderer.js"></script>
+</body>
+
+</html>
