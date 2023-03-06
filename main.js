@@ -9,6 +9,10 @@ const path = require('path')
 const isMac = process.platform === 'darwin'
 
 
+// run this as early in the main process as possible
+if (require('electron-squirrel-startup')) app.quit();
+
+
 
 const template = [
   {
@@ -48,7 +52,7 @@ function createWindow() {
     mainWindow.loadFile('index.html')
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished

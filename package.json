@@ -1,22 +1,59 @@
 {
-  "name": "one",
-  "productName": "one",
-  "description": "My Electron application description",
+  "name": "peat-media-converter",
+  "productName": "peat-media-converter",
+  "description": "peat-media-converter",
   "keywords": [],
   "main": "./main.js",
-  "version": "1.0.0",
+  "version": "0.9.2",
   "author": "dylanhthomas",
   "scripts": {
-    "start": "electron ."
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dylanhthomas/peat-media-converter.git"
   },
   "dependencies": {
-    "jquery": "3.6.3",
+    "@electron-forge/publisher-github": "^6.0.5",
     "@supercharge/fs": "3.4.0",
-    "random-string": "0.2.0",
+    "electron-squirrel-startup": "^1.0.0",
     "ffmpeg-static-electron": "2.0.3",
+    "jquery": "3.6.3",
+    "random-string": "0.2.0",
     "turretcss": "5.2.2"
   },
   "devDependencies": {
-    "electron": "23.1.1"
-  }
+    "@electron-forge/cli": "^6.0.4",
+    "@electron-forge/maker-squirrel": "^6.0.4",
+    "@electron-forge/maker-zip": "^6.0.4",
+    "electron": "23.1.1",
+    "electron-winstaller": "^5.1.0"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel"
+        }
+      ],
+      "publishers": [
+        {
+          "name": "@electron-forge/publisher-github",
+          "config": {
+            "repository": {
+              "owner": "dylanhthomas",
+              "name": "peat-media-converter"
+            },
+            "prerelease": true
+          }
+        }
+      ]
+    }
+  },
+  "license": "MIT"
 }
