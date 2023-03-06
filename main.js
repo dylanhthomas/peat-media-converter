@@ -2,20 +2,15 @@
 
 const { app, Menu, dialog, BrowserWindow } = require('electron')
 var ipc = require('electron').ipcMain
-const os = require('os')
+// const path = require('path') 
+
 var mainWindow = null
-const path = require('path')
-
-// TODO - remove platform references so this is not needed 
-const isMac = process.platform === 'darwin'
-
 
 // Enable installer events
 if (require('electron-squirrel-startup')) app.quit();
 
 // Enable app updates
 require('update-electron-app')()
-
 
 
 // App Menu
@@ -53,7 +48,7 @@ function createWindow() {
     mainWindow.loadFile('index.html')
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished
@@ -71,7 +66,7 @@ app.whenReady().then(() => {
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
-    if (process.platform !== 'darwin') app.quit()
+    app.quit()
 })
 
 // In this file you can include the rest of your app's specific main process
@@ -80,14 +75,12 @@ app.on('window-all-closed', function() {
 ipc.on("open-file-dialog-for-file", function(event) {
     console.log("button pressed")
 
-    if (process.platform !== 'darwin') {
-        dialog.showOpenDialog(null, {
-            properties: ['openFile']
-        }).then((result) => {
-            console.log(result.filePaths)
-            event.sender.send("selected-file", result.filePaths[0])
-        }).catch((err) => {
-            console.log(err)
-        })
-    }
+    dialog.showOpenDialog(null, {
+        properties: ['openFile']
+    }).then((result) => {
+        console.log(result.filePaths)
+        event.sender.send("selected-file", result.filePaths[0])
+    }).catch((err) => {
+        console.log(err)
+    })
 })
