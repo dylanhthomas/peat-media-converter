@@ -14,9 +14,10 @@ const shell = require('electron').shell
 
 const process = require('child_process')
 var randomString = require('random-string');
-var ffmpeg = require('ffmpeg-static-electron');
+// var ffmpeg = require('ffmpeg-static-electron');
 // console.log(ffmpeg.path);
 
+var ffmpeg = ""+ __dirname + "\\bin\\ffmpeg.exe"
 
 const button = document.getElementById("upload")
 
@@ -116,7 +117,8 @@ ipc.on('selected-file', function(event, paths) {
         -loglever error     only output errors to console
 
     */
-    var command_base = `${ffmpeg.path} -i "${paths}" -an -vcodec rawvideo -y -r 25 -hide_banner -loglevel error`
+    // var command_base = `${ffmpeg.path} -i "${paths}" -an -vcodec rawvideo -y -r 25 -hide_banner -loglevel error`
+    var command_base = `${ffmpeg} -i "${paths}" -an -vcodec rawvideo -y -r 25 -hide_banner -loglevel error`
 
     switch (format) {
         case "animatedGIF":

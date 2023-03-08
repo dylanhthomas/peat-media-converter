@@ -1,5 +1,9 @@
 // Modules to control application life and create native browser window
 
+
+console.log("process.resourcesPath")
+console.log(process.resourcesPath)
+
 const { app, Menu, dialog, BrowserWindow } = require('electron')
 var ipc = require('electron').ipcMain
 // const path = require('path') 
