@@ -19,15 +19,24 @@ require('update-electron-app')()
 
 // App Menu
 const template = [{
-    role: 'about',
-    label: "About",
-    submenu: [{
-        label: 'Learn More',
+    role: 'help',
+    label: "Help",
+    submenu: [
+    {
+        label: 'App Homepage',
         click: async () => {
             const { shell } = require('electron')
-            await shell.openExternal('https://electronjs.org')
+            await shell.openExternal('https://dylanhthomas.github.io/peat-media-converter/')
         }
-    }]
+    },
+    {
+        label: 'PEAT Homepage',
+        click: async () => {
+            const { shell } = require('electron')
+            await shell.openExternal('https://trace.umd.edu/peat/')
+        }
+    }
+    ]
 }]
 
 const menu = Menu.buildFromTemplate(template)
