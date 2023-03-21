@@ -30,10 +30,13 @@ If you are curious of the technical underpinings and the commmands that are used
 1. Launch the application
 
 1. Select the type of conversion you want to make
+<img alt="" src="https://user-images.githubusercontent.com/824168/226491167-69e090bf-e8bb-4185-bb15-6865f04e9f82.png" width="300">
 
 1. Select the file you want to convert
+<img alt="" src="https://user-images.githubusercontent.com/824168/226491191-9cccc74c-123d-4157-bb9d-e01d7a3f4b4c.png" width="300">
 
 1. Once the conversion is completed, the converted file will be shown in Windows Explorer
+<img alt="" src="https://user-images.githubusercontent.com/824168/226491200-3f1d42ac-c61d-4880-93d1-07566d2effa9.png" width="300">
 
 
 ## Usage Notes
