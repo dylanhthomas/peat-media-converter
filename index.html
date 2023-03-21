@@ -10,36 +10,93 @@
 
 <body>
     <div class="container padding-xxl">
-        <fieldset>
-            <legend class="font-size-xxl margin-vertical-l"><strong>Select a conversion mode:</strong></legend>
-            <label class="control radio control-xxl">
-                <input type="radio" id="videoFull" name="format" value="videoFull" checked>
-                <span class="control-indicator"></span>
-                <span class="control-label font-size-xxl" for="videoFull"><strong>Video - Full Processing</strong></span>
-            </label>
-            <p class="padding-left-xl"><strong>Best for long or large videos.</strong> Convert a video into uncompressed
-                AVI and scale it down to 640 pixels wide. Audio will be discarded. If the video is longer than 3
-                minutes, it will be split into 3 minute segments. This will allow it to be processed by PEAT which
-                cannot analyze files larger than 2 GB.</p>
-            <label class="control radio control-xxl">
-                <input type="radio" id="videoBasic" name="format" value="videoBasic">
-                <span class="control-indicator"></span>
-                <span class="control-label font-size-xxl" for="videoBasic"><strong>Video - Basic Processing</strong></soan>
-            </label>
-            <p class="padding-left-xl"><strong>Best for short or small videos.</strong> Convert a video into a single
-                uncompressed AVI. Audio will be discarded.</p>
-            <label class="control radio control-xxl">
-                <input type="radio" id="animatedGIF" name="format" value="animatedGIF">
-                <span class="control-indicator"></span>
-                <span class="control-label font-size-xxl" for="animatedGIF"><strong>Animated GIF</strong></span>
-            </label>
-            <p class="padding-left-xl">Convert an animated gif into an uncompressed AVI that can be analyzed by PEAT.
-            </p>
-        </fieldset>
-        <div class="space-l"></div>
-        <button class="button button-primary" id="upload">Select File and Convert</button>
-        <div class="space-l"></div>
-        <div id="info"></div>
+        <h1 id="peat-media-converter">PEAT Media Converter</h1>
+<p><strong>With this tool, you will be able to take any video or animated gif and prep it for analysis in PEAT, without any technical knowledge.</strong></p>
+<p>This tool was developed with the sole purpose of making it simple and foolproof to prepare videos and animated gifs for analysis by PEAT (Photosensitive Epilepsy Analysis Tool), without use of multiple apps, the command-line, or messing with settings.</p>
+<p><em>PEAT is great, but it is picky when it comes to what files it will analyze.</em></p>
+<p>It will only work with videos that are:</p>
+<ul>
+<li><p>uncompressed AVI format</p>
+</li>
+<li><p>2 GB or less</p>
+</li>
+</ul>
+<h2 id="who-is-this-tool-for-">Who is this tool for?</h2>
+<p>If you work in accessibility testing, or want to check the safety of motion media you are producing, this tool can help you use PEAT to do that.</p>
+<p>This is especially for those who are unable to use, or are uncomfortable using, command line tools like <code>ffmpeg</code>.</p>
+<p>If you are curious of the technical underpinings and the commmands that are used behind the scenes, see <a href="#technical-details">Technical Details</a>.</p>
+<h2 id="how-to-use">How to Use</h2>
+<ol>
+<li><p><a href="https://github.com/dylanhthomas/peat-media-converter/releases/download/v1.0.0/peat-media-converter-1.0.0.Setup.exe">Download the installer</a> and install it</p>
+</li>
+<li><p>Launch the application</p>
+</li>
+<li><p>Select the type of conversion you want to make
+<img alt="" src="https://user-images.githubusercontent.com/824168/226491167-69e090bf-e8bb-4185-bb15-6865f04e9f82.png" width="300"></p>
+</li>
+<li><p>Select the file you want to convert
+<img alt="" src="https://user-images.githubusercontent.com/824168/226491191-9cccc74c-123d-4157-bb9d-e01d7a3f4b4c.png" width="300"></p>
+</li>
+<li><p>Once the conversion is completed, the converted file will be shown in Windows Explorer
+<img alt="" src="https://user-images.githubusercontent.com/824168/226491200-3f1d42ac-c61d-4880-93d1-07566d2effa9.png" width="300"></p>
+</li>
+</ol>
+<h2 id="usage-notes">Usage Notes</h2>
+<ul>
+<li>Original files are never touched</li>
+<li>Converted files will be placed in a <code>converter_output</code> subfolder in the same folder where the original is located</li>
+<li>The app will auto-update if new versions are released</li>
+</ul>
+<p><br><br><br><br></p>
+<h2 id="about-peat-from-https-trace-umd-edu-peat-">About PEAT, from <a href="https://trace.umd.edu/peat/">https://trace.umd.edu/peat/</a></h2>
+<blockquote>
+The Trace Centerâ€™s Photosensitive Epilepsy Analysis Tool (PEAT) is a free, downloadable resource for developers to identify seizure risks in their web content and software. The evaluation used by PEAT is based on an analysis engine developed specifically for web and computer applications.
+
+PEAT can help authors determine whether animations or video in their content are likely to cause seizures. Not all content needs to be evaluated by PEAT, but content that contains video or animation should be evaluated, especially if that content contains flashing or rapid transitions between light and dark background colors.
+</blockquote>
+
+<p><br><br><br><br></p>
+<h2 id="technical-details">Technical Details</h2>
+<p><strong>This is not needed to use the tool, this info is for the curious</strong></p>
+<h3 id="app-details">App Details</h3>
+<p>This app is just a GUI front-end that passes files and commands to an included version of <code>ffmpeg</code>. The gui is built using <a href="https://www.electronjs.org/">electron</a>.</p>
+<p><code>ffmpeg</code> is a powerful tool for processing media. A lot of googling and trial and error led to the following commands for the presets in the app. Here they are along with their explanations.</p>
+<h3 id="conversion-mode-details">Conversion Mode Details</h3>
+<p>The app includes three conversion modes, each for a slightly different use case.</p>
+<h4 id="video-basic-processing">Video - Basic Processing</h4>
+<p>Best for short or small videos. Convert a video into a single uncompressed AVI. Audio will be discarded.</p>
+<p><code>ffmpeg -i [INPUT FILE] -an -vcodec rawvideo -y -r 25 -hide_banner -loglevel error [OUTPUT]_converted.avi</code></p>
+<pre><code>Explanation:
+        -<span class="ruby">i                  input file
+</span>        -<span class="ruby">an                 discard audio
+</span>        -<span class="ruby">vcodec rawvideo    rencode video as raw, uncompressed
+</span>        -<span class="ruby">y                  overwrite any files with same name <span class="hljs-keyword">in</span> output directory
+</span>        -<span class="ruby">r <span class="hljs-number">25</span>               set framerate as <span class="hljs-number">25</span> frames per second
+</span>        -<span class="ruby">hidebanner         hide ffmpeg info <span class="hljs-keyword">in</span> console
+</span>        -<span class="ruby">loglever error     only output errors to console</span>
+</code></pre><h4 id="animated-gif">Animated GIF</h4>
+<p>Convert an animated gif into an uncompressed AVI that can be analyzed by PEAT.</p>
+<p><code>ffmpeg -i [INPUT FILE] -an -vcodec rawvideo -y -r 25 -hide_banner -loglevel error -pix_fmt yuv420p [OUTPUT]_converted.avi</code></p>
+<pre><code><span class="hljs-string">Explanation:</span>
+        Same <span class="hljs-keyword">as</span> above, <span class="hljs-string">plus:</span>
+        -pix_fmt yuv420p    encode using video pixels
+</code></pre><h4 id="video-full-processing">Video - Full Processing</h4>
+<p>Best for long or large videos. Convert a video into uncompressed AVI and scale it down to 640 pixels wide. Audio will be discarded. If the video is longer than 3 minutes, it will be split into 3 minute segments. This will allow it to be processed by PEAT which cannot analyze files larger than 2 GB.</p>
+<p><code>ffmpeg -i [INPUT FILE] -an -vcodec rawvideo -y -r 25 -hide_banner -loglevel error -vf &quot;scale=&#39;min(640,iw)&#39;:-1&quot; -map 0 -segment_time 00:03:00 -f segment -reset_timestamps 1 [OUTPUT]_converted_%03d.avi</code></p>
+<pre><code>Explanation:
+                -vf <span class="hljs-string">"scale='min(640,iw)':-1"</span>    scale video down <span class="hljs-built_in">to</span> <span class="hljs-number">640</span> pixels wide <span class="hljs-keyword">if</span> <span class="hljs-keyword">it</span> is larger, maintain aspect ratio.
+                -map <span class="hljs-number">0</span>
+                -f <span class="hljs-keyword">segment</span>                      Break video <span class="hljs-keyword">into</span> multiple <span class="hljs-built_in">files</span> <span class="hljs-keyword">by</span> <span class="hljs-keyword">segment</span>                     
+                -segment_time <span class="hljs-number">00</span>:<span class="hljs-number">03</span>:<span class="hljs-number">00</span>          Create <span class="hljs-keyword">a</span> <span class="hljs-built_in">new</span> <span class="hljs-keyword">segment</span> (<span class="hljs-built_in">file</span>) <span class="hljs-keyword">for</span> every <span class="hljs-number">3</span> minutes <span class="hljs-keyword">of</span> video
+                -reset_timestamps <span class="hljs-number">1</span>             For <span class="hljs-keyword">the</span> <span class="hljs-keyword">segment</span> <span class="hljs-built_in">files</span>, <span class="hljs-built_in">start</span> <span class="hljs-keyword">the</span> timestamps <span class="hljs-built_in">from</span> <span class="hljs-number">0</span> <span class="hljs-built_in">to</span> allow them <span class="hljs-built_in">to</span> be played normally
+</code></pre><h2 id="acknowledgements-credits">Acknowledgements &amp; Credits</h2>
+<p>I would like to thank Zoltan &quot;Du Lac&quot; Hawryluk (User Agent Man) whose explanations of PEAT and ffmpeg comprised the &quot;middle mile&quot; of my investigation and experimentations that led to this app processing video that would always work in PEAT. Especially helpful were his two posts:</p>
+<ul>
+<li><a href="https://www.useragentman.com/blog/2017/04/02/using-peat-to-create-seizureless-web-animations/">Using PEAT To Create Seizureless Web Animations</a></li>
+<li><a href="https://www.useragentman.com/blog/2020/07/19/how-to-fix-seizure-inducing-sequences-in-videos/">How to Fix Seizure Inducing Sequences In Videos</a></li>
+</ul>
+<p>I would like thank Coding Shiksha for his video, <a href="https://www.youtube.com/watch?v=3oqYfVcELJY&amp;t=1s">Build a Media Converter Desktop App Using Electron.js &amp; FFMPEG Full Project For Beginners</a>. This app is basically an extended, specialized, and packaged version of the app built in this video.</p>
+
     </div>
     <script src="./renderer.js"></script>
 </body>
