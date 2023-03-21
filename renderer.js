@@ -138,7 +138,7 @@ ipc.on('selected-file', function(event, paths) {
             // FFMPEG options
             /*
                 -vf "scale='min(640,iw)':-1"    if video is larger than 640 pixels wide, scale it down to 640 pixels wide and automatic height, maintaining aspect ratio.
-                -map 640                        TODO: explanation, and test if needed -vn / -an / -sn / -dn
+                -map 0                          TODO: explanation, and test if needed -vn / -an / -sn / -dn
                 -f segment                      Break video into multiple files by segment                     
                 -segment_time 00:03:00          Create a new segment for every 3 minutes of video
                 -reset_timestamps 1             For the segment files, start the timestamps from 0 to allow them to be played
