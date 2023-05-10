@@ -17,7 +17,10 @@ var randomString = require('random-string');
 // var ffmpeg = require('ffmpeg-static-electron');
 // console.log(ffmpeg.path);
 
-var ffmpeg = ""+ __dirname + "\\bin\\ffmpeg.exe"
+const ffmpeg = ""+ __dirname + "\\bin\\ffmpeg.exe"
+const ffss = ""+ __dirname + "\\bin\\ffss.exe"
+
+
 
 const button = document.getElementById("upload")
 
@@ -33,7 +36,7 @@ button.addEventListener('click', function(event) {
 
 ipc.on('selected-file', function(event, paths) {
     // console.log(event)
-    // console.log(paths)
+    console.log(paths)
 
     // Set name for output directory
     var subdir = 'converter_output'
@@ -65,45 +68,21 @@ ipc.on('selected-file', function(event, paths) {
     var shell_filename = ""
 
 
-    if (format == "videoBasic" || format == "animatedGIF") {
-        output_filename = `${dir}\\${basename}_converted.avi`
-        var safe_filename = !fs.existsSync(output_filename)
+    output_filename = `${dir}\\${basename}_converted.avi`
+    var safe_filename = !fs.existsSync(output_filename)
+    console.log("safe filename: " + safe_filename)
+    shell_filename = output_filename
+
+
+    let index = 1;
+
+    while (safe_filename == false) {
+        output_filename = `${dir}\\${basename}_(${index})_converted.avi`
+        safe_filename = !fs.existsSync(output_filename)
+        console.log("output filename: " + output_filename)
         console.log("safe filename: " + safe_filename)
         shell_filename = output_filename
-
-
-        let index = 1;
-
-        while (safe_filename == false) {
-            output_filename = `${dir}\\${basename}_(${index})_converted.avi`
-            safe_filename = !fs.existsSync(output_filename)
-            console.log("output filename: " + output_filename)
-            console.log("safe filename: " + safe_filename)
-            shell_filename = output_filename
-            index = index + 1
-        }
-    } else {
-
-        output_filename = `${dir}\\${basename}_converted_000.avi`
-        var safe_filename = !fs.existsSync(output_filename)
-        console.log("safe filename: " + safe_filename)
-        shell_filename = output_filename
-        output_pattern = `${dir}\\${basename}_converted_%03d.avi`
-        // output pattern: 3 place counter, incrementing for each segment. i.e 000, 001, 002, 003, 004...
-
-        let index = 1
-
-        while (safe_filename == false) {
-            output_filename = `${dir}\\${basename}_(${index})_converted_000.avi`
-            safe_filename = !fs.existsSync(output_filename)
-            console.log("output filename: " + output_filename)
-            console.log("safe filename: " + safe_filename)
-            shell_filename = output_filename
-            output_pattern = `${dir}\\${basename}_(${index})_converted_%03d.avi`
-            index = index + 1
-        }
-
-
+        index = index + 1
     }
 
     // FFMPEG conversion command with shared options
@@ -132,16 +111,20 @@ ipc.on('selected-file', function(event, paths) {
             */
 
         case "videoFull":
-            convert_command = `${command_base} -vf "scale='min(640,iw)':-1" -map 0 -segment_time 00:03:00 -f segment -reset_timestamps 1 "${output_pattern}"`
+            convert_command = `${command_base} -vf scale='min(640,iw)':-1 "${output_filename}" && ${ffss} "${output_filename}" 1000000000 "${dir}"`
+
             break;
 
             // FFMPEG options
             /*
                 -vf "scale='min(640,iw)':-1"    if video is larger than 640 pixels wide, scale it down to 640 pixels wide and automatic height, maintaining aspect ratio.
-                -map 0                          TODO: explanation, and test if needed -vn / -an / -sn / -dn
-                -f segment                      Break video into multiple files by segment                     
-                -segment_time 00:03:00          Create a new segment for every 3 minutes of video
-                -reset_timestamps 1             For the segment files, start the timestamps from 0 to allow them to be played
+            
+            */
+            // FFSS options
+            /*
+                "[OUTPUT]_converted.avi"        input file
+                1000000000                      size limit (1,000,000,000 bytes)
+                "converter_output"              output directory
             */
 
         case "videoBasic":
@@ -157,6 +140,7 @@ ipc.on('selected-file', function(event, paths) {
     // console.log("shell file: " + shell_filename)
 
     process.exec(convert_command, function(error, stdout, stderr) {
+        console.log(error)
         console.log(stdout)
         console.log(stderr)
 
