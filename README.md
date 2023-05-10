@@ -103,17 +103,22 @@ Explanation:
 
 #### Video - Full Processing
 
-Best for long or large videos. Convert a video into uncompressed AVI and scale it down to 640 pixels wide. Audio will be discarded. If the video is longer than 3 minutes, it will be split into 3 minute segments. This will allow it to be processed by PEAT which cannot analyze files larger than 2 GB.
+Best for long or large videos. Convert a video into uncompressed AVI and scale it down to 640 pixels wide. Audio will be discarded. If the resulting file is larger than 1 GB, the video will be split into equal parts of no larger than 1 GB.
 
-`ffmpeg -i [INPUT FILE] -an -vcodec rawvideo -y -r 25 -hide_banner -loglevel error -vf "scale='min(640,iw)':-1" -map 0 -segment_time 00:03:00 -f segment -reset_timestamps 1 [OUTPUT]_converted_%03d.avi`
+`ffmpeg -i [INPUT FILE] -an -vcodec rawvideo -y -r 25 -hide_banner -loglevel error -vf "scale='min(640,iw)':-1" && $ffss "[OUTPUT]_converted.avi" 1000000000 "converter_output"`
+
 
 ```
 Explanation:
+
+ffmpeg
                 -vf "scale='min(640,iw)':-1"    scale video down to 640 pixels wide if it is larger, maintain aspect ratio.
-                -map 0
-                -f segment                      Break video into multiple files by segment                     
-                -segment_time 00:03:00          Create a new segment (file) for every 3 minutes of video
-                -reset_timestamps 1             For the segment files, start the timestamps from 0 to allow them to be played normally
+
+ffss
+                "[OUTPUT]_converted.avi"        input file
+                1000000000                      size limit (1,000,000,000 bytes)
+                "converter_output"              output directory
+
 ```
 
 
@@ -127,3 +132,5 @@ I would like to thank Zoltan "Du Lac" Hawryluk (User Agent Man) whose explanatio
 - [How to Fix Seizure Inducing Sequences In Videos](https://www.useragentman.com/blog/2020/07/19/how-to-fix-seizure-inducing-sequences-in-videos/)
 
 I would like thank Coding Shiksha for his video, [Build a Media Converter Desktop App Using Electron.js & FFMPEG Full Project For Beginners]( https://www.youtube.com/watch?v=3oqYfVcELJY&t=1s). This app is basically an extended, specialized, and packaged version of the app built in this video.
+
+I would like to thank Lin Yu-Chieh, whose [ffmpegFileSizeSplit](https://github.com/lin-ycv/ffmpegFileSizeSplit) provided a ready solution to splitting videos by size, rather than duration, that I modified to work with AVIs.

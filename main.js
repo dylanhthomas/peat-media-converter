@@ -17,6 +17,13 @@ if (require('electron-squirrel-startup')) app.quit();
 require('update-electron-app')()
 
 
+    app.setAboutPanelOptions({
+        applicationName: 'PEAT Media Converter',
+        applicationVersion: 'v1.0.2 (2023-05-10)'
+    });
+
+
+
 // App Menu
 const template = [{
     role: 'help',
@@ -35,7 +42,14 @@ const template = [{
             const { shell } = require('electron')
             await shell.openExternal('https://trace.umd.edu/peat/')
         }
-    }
+    },
+        {
+        label: 'About',
+        click: async () => {
+            app.showAboutPanel()
+
+        }
+    },
     ]
 }]
 
