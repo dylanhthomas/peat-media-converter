@@ -25,7 +25,7 @@ If you are curious of the technical underpinings and the commmands that are used
 
 ## How to Use
 
-1. [Download the installer](https://github.com/dylanhthomas/peat-media-converter/releases/download/v1.0.1/peat-media-converter-1.0.1.Setup.exe) and install it
+1. [Download the installer](https://github.com/dylanhthomas/peat-media-converter/releases) and install it
 
 1. Launch the application
 
