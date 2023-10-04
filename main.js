@@ -19,7 +19,7 @@ require('update-electron-app')()
 
     app.setAboutPanelOptions({
         applicationName: 'PEAT Media Converter',
-        applicationVersion: 'v1.0.2 (2023-05-10)'
+        applicationVersion: 'v1.0.3 (2023-10-04)'
     });
 
 
@@ -75,7 +75,7 @@ function createWindow() {
     mainWindow.loadFile('index.html')
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished

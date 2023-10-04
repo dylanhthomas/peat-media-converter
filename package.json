@@ -4,7 +4,7 @@
   "description": "peat-media-converter",
   "keywords": [],
   "main": "main.js",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "dylanhthomas",
   "scripts": {
     "start": "electron-forge start",
