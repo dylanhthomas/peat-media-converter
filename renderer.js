@@ -17,10 +17,8 @@ var randomString = require('random-string');
 // var ffmpeg = require('ffmpeg-static-electron');
 // console.log(ffmpeg.path);
 
-const ffmpeg = ""+ __dirname + "\\bin\\ffmpeg.exe"
-const ffss = ""+ __dirname + "\\bin\\ffss.exe"
-
-
+const ffmpeg = "& '"+ __dirname + "\\bin\\ffmpeg.exe'"
+const ffss = "& '"+ __dirname + "\\bin\\ffss.exe'"
 
 const button = document.getElementById("upload")
 
@@ -155,7 +153,7 @@ ipc.on('selected-file', function(event, paths) {
         shell.showItemInFolder(shell_filename);
 
         if (error != null)
-            console.log(error)
+            alert(error)
     })
 
 })

@@ -33,7 +33,7 @@ const template = [{
         label: 'App Homepage',
         click: async () => {
             const { shell } = require('electron')
-            await shell.openExternal('https://dylanhthomas.github.io/peat-media-converter/')
+            await shell.openExternal('https://github.com/dylanhthomas/peat-media-converter')
         }
     },
     {
@@ -75,7 +75,7 @@ function createWindow() {
     mainWindow.loadFile('index.html')
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished
