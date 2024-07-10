@@ -17,8 +17,8 @@ var randomString = require('random-string');
 // var ffmpeg = require('ffmpeg-static-electron');
 // console.log(ffmpeg.path);
 
-const ffmpeg = "& '"+ __dirname + "\\bin\\ffmpeg.exe'"
-const ffss = "& '"+ __dirname + "\\bin\\ffss.exe'"
+const ffmpeg = __dirname + "\\bin\\ffmpeg.exe"
+const ffss =  __dirname + "\\bin\\ffss.exe"
 
 const button = document.getElementById("upload")
 
@@ -95,7 +95,7 @@ ipc.on('selected-file', function(event, paths) {
 
     */
     // var command_base = `${ffmpeg.path} -i "${paths}" -an -vcodec rawvideo -y -r 25 -hide_banner -loglevel error`
-    var command_base = `${ffmpeg} -i "${paths}" -an -vcodec rawvideo -y -r 25 -hide_banner -loglevel error`
+    var command_base = `"${ffmpeg}" -i "${paths}" -an -vcodec rawvideo -y -r 25 -hide_banner -loglevel error`
 
     switch (format) {
         case "animatedGIF":
@@ -109,7 +109,7 @@ ipc.on('selected-file', function(event, paths) {
             */
 
         case "videoFull":
-            convert_command = `${command_base} -vf scale='min(640,iw)':-1 "${output_filename}" && ${ffss} "${output_filename}" 1000000000 "${dir}"`
+            convert_command = `${command_base} -vf scale='min(640,iw)':-1 "${output_filename}" && "${ffss}" "${output_filename}" 1000000000 "${dir}"`
 
             break;
 
@@ -137,7 +137,7 @@ ipc.on('selected-file', function(event, paths) {
     // console.log("output file: " + output_filename)
     // console.log("shell file: " + shell_filename)
 
-    process.exec(convert_command, function(error, stdout, stderr) {
+    process.exec(convert_command, {'shell':'cmd.exe'}, function(error, stdout, stderr) {
         console.log(error)
         console.log(stdout)
         console.log(stderr)
