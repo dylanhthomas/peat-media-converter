@@ -19,7 +19,7 @@ require('update-electron-app')()
 
     app.setAboutPanelOptions({
         applicationName: 'PEAT Media Converter',
-        applicationVersion: 'v1.0.3 (2023-10-04)'
+        applicationVersion: 'v1.0.4 (2024-07-17)'
     });
 
 
